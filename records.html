@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课堂记录 - 教师个人网站</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">物理教师工作室</h1>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="students.html">学生管理</a></li>
+                <li><a href="records.html" class="active">课堂记录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 课堂记录主体 -->
+    <section class="management">
+        <div class="container">
+            <h2>课堂记录</h2>
+            
+            <!-- 添加课堂记录表单 -->
+            <div class="form-card">
+                <h3>添加课堂记录</h3>
+                <form id="recordForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>学生姓名 *</label>
+                            <select id="recordStudent" required>
+                                <option value="">请选择学生</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>上课日期 *</label>
+                            <input type="date" id="recordDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>上课时长 *</label>
+                            <input type="text" id="duration" placeholder="如：1.5h" required>
+                        </div>
+                        <div class="form-group">
+                            <label>上课状态</label>
+                            <select id="state">
+                                <option value="认真听讲">认真听讲</option>
+                                <option value="精神状态好">精神状态好</option>
+                                <option value="思维活跃">思维活跃</option>
+                                <option value="注意力集中">注意力集中</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>本节所讲内容 *</label>
+                        <textarea id="content" rows="3" placeholder="如：复习抛物运动，力学，功与能..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>下节计划</label>
+                        <textarea id="nextPlan" rows="2" placeholder="下节课计划讲解的内容"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课后建议</label>
+                        <textarea id="suggestions" rows="3" placeholder="给学生和家长的建议"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>课堂情况</label>
+                        <textarea id="classNotes" rows="2" placeholder="其他课堂情况说明"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">添加记录</button>
+                </form>
+            </div>
+
+            <!-- 课堂记录列表 -->
+            <div class="students-list">
+                <div class="list-header">
+                    <h3>课堂记录 (<span id="totalRecords">0</span>条)</h3>
+                    <div class="filter-group">
+                        <select id="filterStudent">
+                            <option value="">全部学生</option>
+                        </select>
+                        <input type="text" id="searchRecord" placeholder="搜索记录内容...">
+                    </div>
+                </div>
+                
+                <div id="recordsList" class="records-container">
+                    <!-- 记录卡片将通过JavaScript动态添加 -->
+                </div>
+                
+                <div id="emptyRecords" class="empty-state">
+                    <p>暂无课堂记录，请添加第一条记录</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 查看详情模态框 -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="recordDetail"></div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 物理教师工作室. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="records.js"></script>
+</body>
+</html>

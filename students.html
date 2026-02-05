@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生管理 - 教师个人网站</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">物理教师工作室</h1>
+            <ul class="nav-links">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="students.html" class="active">学生管理</a></li>
+                <li><a href="records.html">课堂记录</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 学生管理主体 -->
+    <section class="management">
+        <div class="container">
+            <h2>学生管理</h2>
+            
+            <!-- 添加学生表单 -->
+            <div class="form-card">
+                <h3>添加新学生</h3>
+                <form id="studentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>学生姓名 *</label>
+                            <input type="text" id="studentName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>所学科目 *</label>
+                            <select id="subject" required>
+                                <option value="">请选择</option>
+                                <option value="AP Physics 1">AP Physics 1</option>
+                                <option value="AP Physics 2">AP Physics 2</option>
+                                <option value="A-Level Physics">A-Level Physics</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>年级</label>
+                            <input type="text" id="grade" placeholder="如：高二">
+                        </div>
+                        <div class="form-group">
+                            <label>联系方式</label>
+                            <input type="text" id="contact" placeholder="家长电话或微信">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>备注</label>
+                        <textarea id="notes" rows="3" placeholder="学习情况、特殊需求等"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">添加学生</button>
+                </form>
+            </div>
+
+            <!-- 学生列表 -->
+            <div class="students-list">
+                <div class="list-header">
+                    <h3>学生列表 (<span id="totalStudents">0</span>人)</h3>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="搜索学生姓名...">
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="studentsTable">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <th>科目</th>
+                                <th>年级</th>
+                                <th>联系方式</th>
+                                <th>备注</th>
+                                <th>添加日期</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsBody">
+                            <!-- 学生数据将通过JavaScript动态添加 -->
+                        </tbody>
+                    </table>
+                    <div id="emptyState" class="empty-state">
+                        <p>暂无学生信息，请添加第一个学生</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 编辑学生模态框 -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>编辑学生信息</h3>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>学生姓名 *</label>
+                    <input type="text" id="editName" required>
+                </div>
+                <div class="form-group">
+                    <label>所学科目 *</label>
+                    <select id="editSubject" required>
+                        <option value="AP Physics 1">AP Physics 1</option>
+                        <option value="AP Physics 2">AP Physics 2</option>
+                        <option value="A-Level Physics">A-Level Physics</option>
+                        <option value="其他">其他</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>年级</label>
+                    <input type="text" id="editGrade">
+                </div>
+                <div class="form-group">
+                    <label>联系方式</label>
+                    <input type="text" id="editContact">
+                </div>
+                <div class="form-group">
+                    <label>备注</label>
+                    <textarea id="editNotes" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">保存修改</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 物理教师工作室. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="students.js"></script>
+</body>
+</html>
