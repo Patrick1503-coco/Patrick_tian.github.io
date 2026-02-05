@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表板 - Patrick Tian's Studio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="brand">
+                <span class="logo-dot"></span>
+                Patrick Tian
+            </div>
+            <nav class="nav">
+                <a href="dashboard.html" class="active">仪表板</a>
+                <a href="students.html">学生管理</a>
+                <a href="records.html">课堂记录</a>
+            </nav>
+            <div style="margin-top:auto;color:var(--text-light);font-size:0.85rem">
+                <strong>教学助手</strong><br>
+                管理您的课程
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main">
+            <!-- 顶部工具栏 -->
+            <div class="topbar">
+                <div class="search">
+                    <h2 style="margin:0;color:var(--text)">仪表板</h2>
+                </div>
+            </div>
+
+            <!-- 仪表板内容 -->
+            <section class="management">
+                <div class="container" style="max-width:100%;padding:0">
+                    <!-- 模块网格 -->
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:24px">
+                        
+                        <!-- 个人信息模块 -->
+                        <div class="dashboard-module" style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:32px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px" onclick="showModule('profile')">
+                            <div style="font-size:3rem;margin-bottom:16px">👤</div>
+                            <h3 style="margin:0 0 8px;font-size:1.3rem;color:var(--text)">个人信息</h3>
+                            <p style="margin:0;color:var(--text-light);text-align:center">查看和编辑您的个人资料</p>
+                        </div>
+
+                        <!-- 教学模块 -->
+                        <div class="dashboard-module" style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:32px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px" onclick="window.location.href='students.html'">
+                            <div style="font-size:3rem;margin-bottom:16px">📚</div>
+                            <h3 style="margin:0 0 8px;font-size:1.3rem;color:var(--text)">教学</h3>
+                            <p style="margin:0;color:var(--text-light);text-align:center">管理学生信息和教学记录</p>
+                        </div>
+
+                        <!-- 日常管理模块 -->
+                        <div class="dashboard-module" style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:32px;cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px" onclick="showModule('daily')">
+                            <div style="font-size:3rem;margin-bottom:16px">📋</div>
+                            <h3 style="margin:0 0 8px;font-size:1.3rem;color:var(--text)">日常管理</h3>
+                            <p style="margin:0;color:var(--text-light);text-align:center">日程安排和任务管理</p>
+                        </div>
+
+                    </div>
+
+                    <!-- 个人信息内容（隐藏） -->
+                    <div id="profileContent" style="display:none;margin-top:32px">
+                        <div class="content-card" style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:32px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+                                <h3 style="margin:0;font-size:1.4rem">个人信息</h3>
+                                <button onclick="closeModule()" class="btn ghost" style="width:100px">关闭</button>
+                            </div>
+                            <div style="color:var(--text-light);text-align:center;padding:40px">
+                                <p>个人信息模块建设中...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 日常管理内容（隐藏） -->
+                    <div id="dailyContent" style="display:none;margin-top:32px">
+                        <div class="content-card" style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:32px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+                                <h3 style="margin:0;font-size:1.4rem">日常管理</h3>
+                                <button onclick="closeModule()" class="btn ghost" style="width:100px">关闭</button>
+                            </div>
+                            <div style="color:var(--text-light);text-align:center;padding:40px">
+                                <p>日常管理模块建设中...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 页脚 -->
+            <footer>&copy; 2026 Patrick Tian. All rights reserved.</footer>
+        </main>
+    </div>
+
+    <script>
+        function showModule(moduleName) {
+            // 隐藏所有内容
+            document.getElementById('profileContent').style.display = 'none';
+            document.getElementById('dailyContent').style.display = 'none';
+            
+            // 显示选中的内容
+            if (moduleName === 'profile') {
+                document.getElementById('profileContent').style.display = 'block';
+            } else if (moduleName === 'daily') {
+                document.getElementById('dailyContent').style.display = 'block';
+            }
+        }
+
+        function closeModule() {
+            document.getElementById('profileContent').style.display = 'none';
+            document.getElementById('dailyContent').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

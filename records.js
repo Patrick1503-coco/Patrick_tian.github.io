@@ -13,13 +13,16 @@ document.addEventListener('DOMContentLoaded', function() {
 // 设置今天的日期为默认值
 function setTodayDate() {
     const today = new Date().toISOString().split('T')[0];
-    document.getElementById('recordDate').value = today;
+    const dateInput = document.getElementById('recordDate');
+    if (dateInput) dateInput.value = today;
 }
 
 // 加载学生选项
 function loadStudentOptions() {
     const studentSelect = document.getElementById('recordStudent');
     const filterSelect = document.getElementById('filterStudent');
+    
+    if (!studentSelect || !filterSelect) return;
     
     const options = students.map(s => 
         `<option value="${s.name}">${s.name}</option>`
@@ -31,24 +34,36 @@ function loadStudentOptions() {
 
 // 设置事件监听
 function setupRecordEventListeners() {
+    // 添加按钮
+    const addBtn = document.getElementById('addRecordBtn');
+    if (addBtn) addBtn.addEventListener('click', toggleForm);
+    
+    // 取消按钮
+    const cancelBtn = document.getElementById('cancelBtn');
+    if (cancelBtn) cancelBtn.addEventListener('click', toggleForm);
+    
     // 添加记录表单提交
-    document.getElementById('recordForm').addEventListener('submit', handleAddRecord);
+    const form = document.getElementById('recordForm');
+    if (form) form.addEventListener('submit', handleAddRecord);
     
     // 筛选和搜索
-    document.getElementById('filterStudent').addEventListener('change', handleFilter);
-    document.getElementById('searchRecord').addEventListener('input', handleFilter);
+    const filterSelect = document.getElementById('filterStudent');
+    const searchInput = document.getElementById('searchRecord');
     
-    // 模态框关闭
-    const closeBtn = document.querySelector('.close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeViewModal);
+    if (filterSelect) filterSelect.addEventListener('change', handleFilter);
+    if (searchInput) searchInput.addEventListener('input', handleFilter);
+}
+
+// 切换表单显示/隐藏
+function toggleForm() {
+    const formCard = document.getElementById('formCard');
+    if (formCard.style.display === 'none') {
+        formCard.style.display = 'block';
+        document.getElementById('recordForm').reset();
+        setTodayDate();
+    } else {
+        formCard.style.display = 'none';
     }
-    window.addEventListener('click', function(e) {
-        const modal = document.getElementById('viewModal');
-        if (e.target === modal) {
-            closeViewModal();
-        }
-    });
 }
 
 // 处理添加记录
@@ -68,11 +83,10 @@ function handleAddRecord(e) {
         createdAt: new Date().toISOString()
     };
     
-    records.unshift(record); // 添加到数组开头，最新的在前面
+    records.unshift(record);
     saveRecords();
     loadRecords();
-    e.target.reset();
-    setTodayDate();
+    toggleForm();
     showMessage('课堂记录添加成功！');
 }
 
@@ -87,6 +101,8 @@ function loadRecords(filterStudent = '', searchText = '') {
     const container = document.getElementById('recordsList');
     const emptyState = document.getElementById('emptyRecords');
     const totalRecords = document.getElementById('totalRecords');
+    
+    if (!container) return;
     
     let filteredRecords = records;
     
@@ -107,42 +123,41 @@ function loadRecords(filterStudent = '', searchText = '') {
     
     if (filteredRecords.length === 0) {
         container.innerHTML = '';
-        emptyState.classList.add('show');
+        if (emptyState) emptyState.style.display = 'block';
     } else {
-        emptyState.classList.remove('show');
+        if (emptyState) emptyState.style.display = 'none';
         container.innerHTML = filteredRecords.map(record => `
-            <div class="record-card">
-                <div class="record-header">
-                    <h4>${record.studentName}</h4>
-                    <span class="record-date">${formatDate(record.date)}</span>
-                </div>
-                
-                <div class="record-info">
-                    <div class="info-item">
-                        <span class="info-label">时长:</span>
-                        <span>${record.duration}</span>
+            <div class="card" style="margin-bottom:12px">
+                <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:8px">
+                    <div>
+                        <h3 style="margin:0;font-size:1rem">${record.studentName}</h3>
+                        <div class="small muted" style="margin-top:2px">${formatDate(record.date)} · ${record.duration}</div>
                     </div>
-                    <div class="info-item">
-                        <span class="info-label">状态:</span>
-                        <span>${record.state}</span>
+                    <div style="color:var(--text-light);font-size:0.9rem;background:rgba(0,102,255,0.05);padding:4px 8px;border-radius:6px">${record.state}</div>
+                </div>
+                
+                <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:8px">
+                    <div style="font-size:0.95rem;line-height:1.5;color:var(--text)">
+                        <strong>📚 本节内容:</strong><br>
+                        ${truncateText(record.content, 120)}
                     </div>
+                    
+                    ${record.suggestions ? `
+                        <div style="margin-top:8px;font-size:0.95rem">
+                            <strong>💡 建议:</strong><br>
+                            ${truncateText(record.suggestions, 100)}
+                        </div>
+                    ` : ''}
                 </div>
                 
-                <div class="record-content">
-                    <p><strong>本节内容:</strong> ${truncateText(record.content, 100)}</p>
-                    ${record.suggestions ? `<p><strong>课后建议:</strong> ${truncateText(record.suggestions, 100)}</p>` : ''}
-                </div>
-                
-                <div class="record-actions">
-                    <button class="btn-view" onclick="viewRecord(${record.id})">查看详情</button>
-                    <button class="btn-edit" onclick="editRecord(${record.id})">编辑</button>
-                    <button class="btn-delete" onclick="deleteRecord(${record.id})">删除</button>
+                <div style="display:flex;gap:8px;margin-top:10px">
+                    <button class="btn ghost" style="width:60px;font-size:0.85rem;padding:6px 8px" onclick="deleteRecord(${record.id})">删除</button>
                 </div>
             </div>
         `).join('');
     }
     
-    totalRecords.textContent = records.length;
+    if (totalRecords) totalRecords.textContent = records.length;
 }
 
 // 截断文本
@@ -158,91 +173,13 @@ function handleFilter() {
     loadRecords(filterStudent, searchText);
 }
 
-// 查看记录详情
-function viewRecord(id) {
-    const record = records.find(r => r.id === id);
-    if (!record) return;
-    
-    const detailHtml = `
-        <h3>课堂记录详情</h3>
-        <div style="margin-top: 1.5rem;">
-            <div style="margin-bottom: 1rem;">
-                <strong>学生姓名:</strong> ${record.studentName}
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong>上课日期:</strong> ${formatDate(record.date)}
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong>上课时长:</strong> ${record.duration}
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong>上课状态:</strong> ${record.state}
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <strong>本节所讲内容:</strong><br>
-                <p style="margin-top: 0.5rem; line-height: 1.6;">${record.content}</p>
-            </div>
-            ${record.nextPlan ? `
-                <div style="margin-bottom: 1rem;">
-                    <strong>下节计划:</strong><br>
-                    <p style="margin-top: 0.5rem; line-height: 1.6;">${record.nextPlan}</p>
-                </div>
-            ` : ''}
-            ${record.suggestions ? `
-                <div style="margin-bottom: 1rem;">
-                    <strong>课后建议:</strong><br>
-                    <p style="margin-top: 0.5rem; line-height: 1.6;">${record.suggestions}</p>
-                </div>
-            ` : ''}
-            ${record.classNotes ? `
-                <div style="margin-bottom: 1rem;">
-                    <strong>学生课堂情况:</strong><br>
-                    <p style="margin-top: 0.5rem; line-height: 1.6;">${record.classNotes}</p>
-                </div>
-            ` : ''}
-        </div>
-    `;
-    
-    document.getElementById('recordDetail').innerHTML = detailHtml;
-    document.getElementById('viewModal').classList.add('show');
-}
-
-// 编辑记录（简化版，直接删除重建）
-function editRecord(id) {
-    const record = records.find(r => r.id === id);
-    if (!record) return;
-    
-    // 填充表单
-    document.getElementById('recordStudent').value = record.studentName;
-    document.getElementById('recordDate').value = record.date;
-    document.getElementById('duration').value = record.duration;
-    document.getElementById('state').value = record.state;
-    document.getElementById('content').value = record.content;
-    document.getElementById('nextPlan').value = record.nextPlan || '';
-    document.getElementById('suggestions').value = record.suggestions || '';
-    document.getElementById('classNotes').value = record.classNotes || '';
-    
-    // 删除原记录
-    deleteRecord(id, false);
-    
-    // 滚动到表单顶部
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    showMessage('记录已加载到表单，修改后请重新提交');
-}
-
 // 删除记录
-function deleteRecord(id, confirm = true) {
-    if (confirm && !window.confirm('确定要删除这条记录吗？')) return;
+function deleteRecord(id) {
+    if (!confirm('确定要删除这条记录吗？')) return;
     
     records = records.filter(r => r.id !== id);
     saveRecords();
     loadRecords();
-    if (confirm) {
-        showMessage('记录已删除');
-    }
+    showMessage('记录已删除');
 }
 
-// 关闭查看模态框
-function closeViewModal() {
-    document.getElementById('viewModal').classList.remove('show');
-}

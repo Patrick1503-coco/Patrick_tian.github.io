@@ -3,15 +3,12 @@ function updateHomepageStats() {
     const students = JSON.parse(localStorage.getItem('students') || '[]');
     const records = JSON.parse(localStorage.getItem('records') || '[]');
     
-    const studentCountElement = document.getElementById('studentCount');
-    const recordCountElement = document.getElementById('recordCount');
+    // 更新首页卡片统计数据
+    const stat1 = document.querySelector('.stat:nth-child(1) .num');
+    const stat2 = document.querySelector('.stat:nth-child(2) .num');
     
-    if (studentCountElement) {
-        studentCountElement.textContent = students.length;
-    }
-    if (recordCountElement) {
-        recordCountElement.textContent = records.length;
-    }
+    if (stat1) stat1.textContent = students.length;
+    if (stat2) stat2.textContent = records.length;
 }
 
 // 页面加载时执行
@@ -28,22 +25,30 @@ function formatDate(dateString) {
     return `${year}-${month}-${day}`;
 }
 
-// 显示成功消息
+// 显示成功消息（SaaS 风格）
 function showMessage(message, type = 'success') {
     const messageDiv = document.createElement('div');
+    const bgColor = type === 'success' ? '#0066ff' : '#ff4444';
+    const icon = type === 'success' ? '✓' : '✕';
+    
     messageDiv.style.cssText = `
         position: fixed;
-        top: 80px;
+        top: 20px;
         right: 20px;
-        padding: 15px 25px;
-        background: ${type === 'success' ? '#4CAF50' : '#f44336'};
+        padding: 14px 18px;
+        background: ${bgColor};
         color: white;
-        border-radius: 5px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        border-radius: 10px;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
         z-index: 10000;
         animation: slideIn 0.3s ease-out;
+        font-weight: 500;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     `;
-    messageDiv.textContent = message;
+    messageDiv.innerHTML = `<span>${icon}</span><span>${message}</span>`;
     document.body.appendChild(messageDiv);
     
     setTimeout(() => {
@@ -65,3 +70,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
